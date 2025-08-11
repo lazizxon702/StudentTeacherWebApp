@@ -1,0 +1,13 @@
+using StudentTeacher.DTOs;
+using WebApplication1.Dto;
+
+namespace WebApplication1.Interface;
+
+public interface ITeacherService
+{
+    public Task<TeacherReadDto> servis(int id);
+    public Task<string?> PostTeacher( TeacherCreateDto dto);
+    public Task<TeacherReadDto?> GetAllTeacher();
+    Task<bool> TeacherUpdate(int id, TeacherUpdateDto dto);
+    Task<bool> TeacherDelete(int id);
+}
