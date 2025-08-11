@@ -1,0 +1,47 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using StudentTeacher.Student;
+using WebApplication1.Data;
+using WebApplication1.Dto;
+using WebApplication1.Interface;
+
+namespace WebApplication1.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class StudentSubjectsController : ControllerBase
+{
+    public IStudentSubjectService _StudentSubjectService;
+    private readonly AppDbContext _context;
+
+    public StudentSubjectsController(AppDbContext context, IStudentSubjectService servis)
+    {
+        _context = context;
+        _StudentSubjectService = servis;
+        
+    }
+
+   /// GET
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+     var result = await _StudentSubjectService.GetAllStudentSubject();
+     return Ok(result);
+     
+    } 
+
+    /// POST
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] StudentSubjectCreateDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var result = await _StudentSubjectService.PostStudentSubject(dto);
+
+        if (result == null)
+            return NotFound("Student or Subject not found.");
+
+        return Ok(result);
+    }
+}
