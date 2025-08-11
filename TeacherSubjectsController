@@ -1,0 +1,43 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using StudentTeacher.DTOs;
+using StudentTeacher.Teacher;
+using WebApplication1.Data;
+using WebApplication1.Dto;
+using WebApplication1.Interface;
+
+namespace WebApplication1.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class TeacherSubjectsController : ControllerBase 
+ {
+    private readonly AppDbContext _context;
+    public ITeacherSubjectService _TeacherSubjectService;
+    
+
+    public TeacherSubjectsController(AppDbContext context ,  ITeacherSubjectService servis)
+    {
+        _context = context;
+        _TeacherSubjectService = servis;
+    }
+    
+    /// GET
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+      var result = await _TeacherSubjectService.GetAllTeacherSubjects();
+        return Ok(result);
+    }
+
+    /// POST
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] TeacherSubjectCreateDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var created = await _TeacherSubjectService.CreateAsync(dto);
+        return Ok(created); 
+    }
+ }
