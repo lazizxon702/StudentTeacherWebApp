@@ -1,0 +1,20 @@
+using StudentTeacher.others;
+
+namespace StudentTeacher.Student;
+using city;
+
+public class Student
+{
+    public int Id { get; set; }//1
+    public string? Name { get; set; }
+    public int CityId { get; set; }
+    public City City { get; set; }//2
+    public DateTime DateOfBirth { get; set; } = DateTime.UtcNow;
+    public string? Gender { get; set; }
+    public int GradeLevel  { get; set; }
+    public int DepartmentId { get; set; }
+    public Departments Departments { get; set; }//3
+    public DateTime CreatedDate {get; init;}  = DateTime.UtcNow;
+    public List<StudentsSubjects> StudentsSubjects { get; set; }//4
+                                                                                                                        
+}
