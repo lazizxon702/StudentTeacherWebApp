@@ -1,0 +1,12 @@
+
+
+namespace StudentTeacher.city;
+
+public class City
+{ 
+   
+    public int Id { get; set; }
+  
+    public string? Name { get; set; }
+    public ICollection<Student.Student> Students { get; set; } = new List<Student.Student>();
+}
