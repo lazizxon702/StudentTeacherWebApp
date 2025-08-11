@@ -1,0 +1,54 @@
+using Microsoft.EntityFrameworkCore;
+using StudentTeacher.DTOs;
+using StudentTeacher.Teacher;
+using WebApplication1.Data;
+using WebApplication1.Dto;
+using WebApplication1.Interface;
+
+namespace WebApplication1.Services;
+
+public class TeacherSubjectService(AppDbContext db) : ITeacherSubjectService
+{
+
+    /// <summary>
+    ///  Read
+    /// </summary>
+    /// <returns></returns>
+    public async Task<TeacherSubjectReadDto> GetAllTeacherSubjects()
+    {
+        var result = await db.TeacherSubjects
+            .Include(x => x.Teacher)
+            .Include(x => x.Subject)
+            .Select(x => new TeacherSubjectReadDto
+            {
+                Id = x.Id,
+                TeacherId = x.TeacherId,
+                TeacherName = x.Teacher.Name,
+                SubjectId = x.SubjectId,
+                SubjectName = x.Subject.Name,
+                CreatedDate = x.CreatedDate
+            })
+            .FirstOrDefaultAsync(); 
+        return result; 
+    }
+    
+    /// <summary>
+    ///  Create
+    /// </summary>
+    /// <param name="dto"></param>
+    /// <returns></returns>
+
+    public async Task<TeacherSubjectCreateDto> CreateAsync(TeacherSubjectCreateDto dto)
+    {
+        var entity = new TeacherSubject
+        {
+            TeacherId = dto.TeacherId,
+            SubjectId = dto.SubjectId
+        };
+
+        await db.TeacherSubjects.AddAsync(entity);
+        await db.SaveChangesAsync();
+
+        return dto;
+    }
+}
