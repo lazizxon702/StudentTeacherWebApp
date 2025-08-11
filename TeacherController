@@ -1,0 +1,75 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using StudentTeacher.DTOs;
+using WebApplication1.Data;
+using WebApplication1.Interface;
+
+namespace StudentTeacher.Teacher;
+
+[ApiController]
+[Route("api/[controller]")]
+public class TeacherController : ControllerBase
+{
+    public ITeacherService _TeacherService;
+    private readonly AppDbContext _context;
+
+    public TeacherController(AppDbContext context , ITeacherService service)
+    {
+        _context = context;
+        _TeacherService = service;
+    }
+
+
+    /// GetAll
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+    var teachers = await _TeacherService.GetAllTeacher();
+    return Ok(teachers);
+    }
+    
+
+    ///  Get ById
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+    var dto = await _TeacherService.servis(id);
+        return Ok(dto);
+    }
+
+   
+    /// Post
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] TeacherCreateDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var result = await _TeacherService.PostTeacher(dto);
+
+        if (result == null)
+            return NotFound("City, Department yoki Subject topilmadi.");
+
+        return Ok(result);
+    }
+    
+    
+     /// Update
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, [FromBody] TeacherUpdateDto dto)
+    {
+        var updated = await _TeacherService.TeacherUpdate(id, dto);
+        if (!updated) return NotFound();
+        return NoContent();
+    }
+    
+ 
+    /// Delete
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var deleted = await _TeacherService.TeacherDelete(id);
+        if (!deleted) return NotFound();
+        return NoContent();
+    }
+}
